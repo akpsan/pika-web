@@ -1,0 +1,96 @@
+{
+  "name": "pika-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/pika-client/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/pika-client",
+        "index": "apps/pika-client/src/index.html",
+        "baseHref": "/",
+        "main": "apps/pika-client/src/main.tsx",
+        "tsConfig": "apps/pika-client/tsconfig.app.json",
+        "assets": [
+          "apps/pika-client/src/favicon.ico",
+          "apps/pika-client/src/assets"
+        ],
+        "styles": ["apps/pika-client/src/styles.scss"],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/pika-client/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/pika-client/src/environments/environment.ts",
+              "with": "apps/pika-client/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "pika-client:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "pika-client:build:development"
+        },
+        "production": {
+          "buildTarget": "pika-client:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/pika-client/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "pika-client:build"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/pika-client/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
